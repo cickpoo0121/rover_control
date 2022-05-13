@@ -34,7 +34,7 @@ L|S:1,1
 F|S:1,0
 R|W:1,0
 
-## Set up
+## Set up project
 
 How I do:
 
@@ -44,11 +44,48 @@ How I do:
 
     ![Screenshot](screenshot.JPG)
 
-Set up project:
+Create project:
 
 ```bash
-1. npx create-next-app 'project name'
-2. npm i bootstrap express multer nodemon read-excel-file
+npx create-next-app 'project name'
+npm i bootstrap express multer nodemon read-excel-file 
+```
+
+create server.js file in root
+
+```bash
+const express = require("express");
+const next = require("next");
+
+const port = 3000;
+const dev = process.env.NODE_ENV !== "production";
+const app = next({ dev });
+const handle = app.getRequestHandler();
+
+app.prepare().then(() => {
+  const server = express();
+
+  server.all("*", (req, res) => {
+    return handle(req, res);
+  });
+
+  server.listen(port, (err) => {
+    if (err) throw err;
+    console.log(`> Ready on http://localhost:${port}`);
+  });
+});
+
+```
+
+change scripts in package.json only "dev":
+
+```bash
+"scripts": {
+    "dev": "nodemon server.js",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
 ```
 
 - Package [read-excel-file](https://www.npmjs.com/package/read-excel-file).
