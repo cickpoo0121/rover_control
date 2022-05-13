@@ -22,6 +22,15 @@ export default function Home() {
     const formData = new FormData();
     formData.append("files", file.files[0]);
 
+    if (!file.files[0]) {
+      alert("Please select a file");
+      return;
+    }
+
+    if (file.files[0].name.split(".")[1] !== "xlsx") {
+      alert("Please select xlsx file");
+      return;
+    }
     try {
       const res = await fetch("/uploadExcel", {
         method: "POST",
@@ -53,14 +62,7 @@ export default function Home() {
           <h1>explore planet</h1>
         </nav>
         <hr />
-        <ul>
-          {result.map((el, index) => (
-            <li key={`${index}`}>{el.input}</li>
-          ))}
-        </ul>
-
         <h4 className="text-success mb-3">Input excel file</h4>
-
         <input id="inputFile" type="file" accept=".xlsx" />
         <button
           className="btn btn-outline-primary"
@@ -69,6 +71,22 @@ export default function Home() {
         >
           Submit
         </button>
+
+        <h4 className="mt-5">Result</h4>
+        {result.length !== 0 && (
+          <table className="text-center my-3">
+            <tr>
+              <th>Input</th>
+              <th>Output</th>
+            </tr>
+            {result.map((el, index) => (
+              <tr key={index}>
+                <td>{el.input}</td>
+                <td>{`${el.dir}:${el.x},${el.y}`}</td>
+              </tr>
+            ))}
+          </table>
+        )}
       </main>
     </div>
   );
