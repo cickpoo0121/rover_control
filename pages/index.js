@@ -12,11 +12,17 @@ export default function Home() {
 
     if (!file.files[0]) {
       alert("Please select a file");
+
+      // clear input file
+      file.value = "";
       return;
     }
 
     if (file.files[0].name.split(".")[1] !== "xlsx") {
       alert("Please select xlsx file");
+
+      // clear input file
+      file.value = "";
       return;
     }
     try {
@@ -27,6 +33,9 @@ export default function Home() {
 
       const json = await res.json();
       setResult(json.data);
+
+      // clear input file
+      file.value = "";
     } catch (error) {
       console.log(error);
     }
@@ -59,16 +68,20 @@ export default function Home() {
         <h4 className="mt-5">Result</h4>
         {result.length !== 0 && (
           <table className="text-center my-3">
-            <tr>
-              <th>Input</th>
-              <th>Output</th>
-            </tr>
-            {result.map((el, index) => (
-              <tr key={index}>
-                <td>{el.input}</td>
-                <td>{`${el.dir}:${el.x},${el.y}`}</td>
+            <thead>
+              <tr>
+                <th>Input</th>
+                <th>Output</th>
               </tr>
-            ))}
+            </thead>
+            <tbody>
+              {result.map((el, index) => (
+                <tr key={index}>
+                  <td>{el.input}</td>
+                  <td>{`${el.dir}:${el.x},${el.y}`}</td>
+                </tr>
+              ))}
+            </tbody>
           </table>
         )}
       </main>
