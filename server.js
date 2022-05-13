@@ -33,19 +33,20 @@ app.prepare().then(() => {
   server.post("/uploadExcel", upload.single("files"), (req, res, next) => {
     const file = req.file;
 
+    // not file
     if (!file) {
       res.status(500).send({ msg: "Internal server error" });
       return;
     }
 
+    // read excel
     readXlsxfile(req.file.path).then((row) => {
       var result = [];
       let data = row.toString().split(",");
-      // console.log("data", data);
       const direction = ["N", "E", "S", "W"];
 
+      // mapping excel to object
       for (let i = 0; i < data.length; i++) {
-        // console.log("i", i);
         var obj = i === 0 ? {} : JSON.parse(JSON.stringify(result[i - 1]));
 
         // set initail

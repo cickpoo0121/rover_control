@@ -1,22 +1,10 @@
 import Head from "next/head";
 import { useState } from "react";
-// import axios from "axios";
-// import Image from "next/image";
-// import styles from '../styles/Home.module.css'
-
-export async function getStaticProps() {
-  const res = await fetch("https://api.github.com/repos/vercel/next.js");
-  const json = await res.json();
-  // console.log("json", json);
-  return {
-    props: { data: ["a", "b", "c"] },
-  };
-}
 
 export default function Home() {
   const [result, setResult] = useState([]);
 
-  async function handleClick(event) {
+  async function handleUploadFile(event) {
     event.preventDefault();
     const file = document.getElementById("inputFile");
     const formData = new FormData();
@@ -39,13 +27,9 @@ export default function Home() {
 
       const json = await res.json();
       setResult(json.data);
-      console.log(json.data);
     } catch (error) {
       console.log(error);
     }
-
-    // const json = await res.json();
-    // setData(json);
   }
 
   return (
@@ -67,7 +51,7 @@ export default function Home() {
         <button
           className="btn btn-outline-primary"
           type="button"
-          onClick={handleClick}
+          onClick={handleUploadFile}
         >
           Submit
         </button>
