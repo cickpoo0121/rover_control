@@ -14,14 +14,9 @@ export async function getStaticProps() {
 }
 
 export default function Home() {
-  const [data, setData] = useState([]);
+  const [result, setResult] = useState([]);
 
   async function handleClick(event) {
-    // const res = await fetch("https://jsonplaceholder.typicode.com/posts");
-    // const res = await fetch("/hi");
-    // const json = await res.json();
-    // alert(json.msg);
-    // console.log(json);
     event.preventDefault();
     const file = document.getElementById("inputFile");
     const formData = new FormData();
@@ -31,13 +26,11 @@ export default function Home() {
       const res = await fetch("/uploadExcel", {
         method: "POST",
         body: formData,
-        // headers: {
-        //   "Content-Type": "multipart/form-data",
-        // },
       });
 
       const json = await res.json();
-      alert(json.msg);
+      setResult(json.data);
+      console.log(json.data);
     } catch (error) {
       console.log(error);
     }
@@ -61,18 +54,14 @@ export default function Home() {
         </nav>
         <hr />
         <ul>
-          {data.map(
-            (el, index) => el.id < 10 && <li key={`${index}`}>{el.id}</li>
-          )}
+          {result.map((el, index) => (
+            <li key={`${index}`}>{el.input}</li>
+          ))}
         </ul>
 
         <h4 className="text-success mb-3">Input excel file</h4>
 
-        <input
-          id="inputFile"
-          type="file"
-          accept=".csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-        />
+        <input id="inputFile" type="file" accept=".xlsx" />
         <button
           className="btn btn-outline-primary"
           type="button"
