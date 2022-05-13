@@ -1,8 +1,51 @@
 import Head from "next/head";
-import Image from "next/image";
+import { useState } from "react";
+// import axios from "axios";
+// import Image from "next/image";
 // import styles from '../styles/Home.module.css'
 
+export async function getStaticProps() {
+  const res = await fetch("https://api.github.com/repos/vercel/next.js");
+  const json = await res.json();
+  // console.log("json", json);
+  return {
+    props: { data: ["a", "b", "c"] },
+  };
+}
+
 export default function Home() {
+  const [data, setData] = useState([]);
+
+  async function handleClick(event) {
+    // const res = await fetch("https://jsonplaceholder.typicode.com/posts");
+    // const res = await fetch("/hi");
+    // const json = await res.json();
+    // alert(json.msg);
+    // console.log(json);
+    event.preventDefault();
+    const file = document.getElementById("inputFile");
+    const formData = new FormData();
+    formData.append("files", file.files[0]);
+
+    try {
+      const res = await fetch("/uploadExcel", {
+        method: "POST",
+        body: formData,
+        // headers: {
+        //   "Content-Type": "multipart/form-data",
+        // },
+      });
+
+      const json = await res.json();
+      alert(json.msg);
+    } catch (error) {
+      console.log(error);
+    }
+
+    // const json = await res.json();
+    // setData(json);
+  }
+
   return (
     <div>
       <Head>
@@ -17,14 +60,24 @@ export default function Home() {
           <h1>explore planet</h1>
         </nav>
         <hr />
+        <ul>
+          {data.map(
+            (el, index) => el.id < 10 && <li key={`${index}`}>{el.id}</li>
+          )}
+        </ul>
 
         <h4 className="text-success mb-3">Input excel file</h4>
 
         <input
+          id="inputFile"
           type="file"
           accept=".csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
         />
-        <button className="btn btn-outline-primary" type="button">
+        <button
+          className="btn btn-outline-primary"
+          type="button"
+          onClick={handleClick}
+        >
           Submit
         </button>
       </main>
