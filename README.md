@@ -48,7 +48,7 @@ Create project:
 
 ```bash
 npx create-next-app 'project name'
-npm i bootstrap express multer nodemon read-excel-file husky
+npm i bootstrap express multer nodemon read-excel-file pre-commit
 ```
 
 create server.js file in root for backend server
@@ -85,6 +85,14 @@ change scripts in package.json only "dev" environment:
     "start": "next start",
     "lint": "next lint"
   },
+```
+
+set up per-commit
+
+```bash
+ "pre-commit": [
+    "lint"
+  ]
 ```
 
 - Uses package [read-excel-file](https://www.npmjs.com/package/read-excel-file) to read excel files.
