@@ -50,8 +50,6 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <image class="" />
-
       <main className="container">
         <nav className="navbar bg-white ">
           <h1>explore planet</h1>
