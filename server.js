@@ -61,34 +61,18 @@ app.prepare().then(() => {
         obj.input = data[i];
 
         // set x,y when input F
-        if (data[i] === "F") {
-          // E, W are affect to X axis
-          obj.x =
-            obj.dir === "E" // if E is mean x increase 1 (move)
-              ? obj.x + 1 // x + 1
-              : obj.dir === "W" // if W is mean x decrease 1 (move)
-              ? obj.x === 0 // before decrease x check x is 0 or not
-                ? obj.x // if x equal 0, x = x is mean x = 0
-                : obj.x - 1 // if x not equal 0 then x decrease 1
-              : obj.x; // it means not E and W then not affect to y
-
-          // N, WS are affect to Y axis
-          obj.y =
-            obj.dir === "N" // if N is mean y increase 1 (move)
-              ? obj.y + 1 // y + 1
-              : obj.dir === "S" // if S is mean x decrease 1 (move)
-              ? obj.y === 0 // before decrease y check y is 0 or not
-                ? obj.y // if y equal 0, y = y is mean y = 0
-                : obj.y - 1 // if y not equal 0 then y decrease 1
-              : obj.y; // it means not N and S then no affect to y
+        if (data[i] === "F" || data[i] === "B") {
+          obj = moving(data[i], obj, parseInt(data[0]));
         } else {
           // set direction
-          if (direction.indexOf(obj.dir) === 0 && data[i] === "L") { // when currenct direction is N and input is L then set direction to W
+          if (direction.indexOf(obj.dir) === 0 && data[i] === "L") {
+            // when currenct direction is N and input is L then set direction to W
             obj.dir = "W";
           } else if (
             direction.indexOf(obj.dir) === direction.length - 1 &&
-            data[i] === "R" 
-          ) { // when currenct direction is W and input is R then set direction to N
+            data[i] === "R"
+          ) {
+            // when currenct direction is W and input is R then set direction to N
             obj.dir = "N";
           } else {
             // set direction
@@ -98,13 +82,51 @@ app.prepare().then(() => {
                 : direction[direction.indexOf(obj.dir) - 1];
           }
         }
-        
+
         // add result
         result.push(obj);
       }
       res.status(200).send({ msg: "Upload successfuly", data: result });
     });
   });
+
+  /**
+   * moving function
+   * @param {string} input - input data (R, L, F, B)
+   * @param {Object} obj - object of last input and output
+   * @param {number} block - area of map I assume is square (block*block)
+   */
+  moving = (input, obj, block) => {
+    // E, W are affect to X axis
+    // N, WS are affect to Y axis
+    let area = block * block;
+    obj.x =
+      obj.dir === (input === "F" ? "E" : "W")
+        ? obj.x + 1
+        : obj.dir === (input === "F" ? "W" : "E")
+        ? obj.x === 0
+          ? obj.x
+          : obj.x - 1
+        : obj.x;
+
+    obj.y =
+      obj.dir === (input === "F" ? "N" : "S")
+        ? obj.y + 1
+        : obj.dir === (input === "F" ? "S" : "N")
+        ? obj.y === 0
+          ? obj.y
+          : obj.y - 1
+        : obj.y;
+
+    if (obj.x >= area) {
+      obj.x = area;
+    }
+    if (obj.y >= area) {
+      obj.y = area;
+    }
+
+    return obj;
+  };
 
   server.all("*", (req, res) => {
     return handle(req, res);
