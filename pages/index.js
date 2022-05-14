@@ -22,7 +22,7 @@ export default function Home() {
       alert("Please select xlsx file");
 
       // clear input file
-      file.value = "";
+      file.value = ""
       return;
     }
     try {
