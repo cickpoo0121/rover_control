@@ -34,24 +34,24 @@ L|S:1,1
 F|S:1,0
 R|W:1,0
 
-## Set up project
+## Solutions
 
-How I do:
-
-- I designed an assignment for a web application to upload files to the server and return them with a rest api. A web accepts XLSX files only. On the server side, it reads excel and calculates the answer, then responds with api.
-- I an assignment to read XLSX file because I do not know what file time that an assigemnt want.
+- I designed an assignment for a web application with [Next.js](https://nextjs.org/) to upload files to the [Node.js Express](https://expressjs.com/) server and return them with a rest api. A web accepts XLSX files only. On the server side, it reads excel and calculates the answer, then responds a result back.
+- I an assignment to read XLSX file because I do not know what file type that an assigemnt want.
 - I think this proble we can use [Doubly Circular Linked List](https://www.geeksforgeeks.org/doubly-circular-linked-list-set-1-introduction-and-insertion/) to solve about direction N, S, E, W. R is next Node and L is prev Node, But to make it simple, I did not use a doubly circular linked list.
 
     ![Screenshot](screenshot.JPG)
+
+## Set up project
 
 Create project:
 
 ```bash
 npx create-next-app 'project name'
-npm i bootstrap express multer nodemon read-excel-file 
+npm i bootstrap express multer nodemon read-excel-file husky
 ```
 
-create server.js file in root
+create server.js file in root for backend server
 
 ```bash
 const express = require("express");
@@ -74,10 +74,9 @@ app.prepare().then(() => {
     console.log(`> Ready on http://localhost:${port}`);
   });
 });
-
 ```
 
-change scripts in package.json only "dev":
+change scripts in package.json only "dev" environment:
 
 ```bash
 "scripts": {
@@ -88,9 +87,9 @@ change scripts in package.json only "dev":
   },
 ```
 
-- Package [read-excel-file](https://www.npmjs.com/package/read-excel-file).
+- Uses package [read-excel-file](https://www.npmjs.com/package/read-excel-file) to read excel files.
 
-    Browser:
+    For browser:
     ```bash
         import readXlsxFile from 'read-excel-file'
         const input = document.getElementById('input')
@@ -103,7 +102,7 @@ change scripts in package.json only "dev":
         })
     ```
 
-    Node.js:
+    For Node.js:
     ```bash
         const readXlsxFile = require('read-excel-file/node')
         // File path.
@@ -122,5 +121,3 @@ yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
