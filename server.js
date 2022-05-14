@@ -60,27 +60,12 @@ app.prepare().then(() => {
         // set input (R, L, F)
         obj.input = data[i];
 
-        // set x,y when input F
-        if (data[i] === "F" || data[i] === "B") {
+        // set position x,y
+        if (data[i][0] === "F" || data[i][0] === "B") {
           obj = moving(data[i], obj, parseInt(data[0]));
         } else {
           // set direction
-          if (direction.indexOf(obj.dir) === 0 && data[i] === "L") {
-            // when currenct direction is N and input is L then set direction to W
-            obj.dir = "W";
-          } else if (
-            direction.indexOf(obj.dir) === direction.length - 1 &&
-            data[i] === "R"
-          ) {
-            // when currenct direction is W and input is R then set direction to N
-            obj.dir = "N";
-          } else {
-            // set direction
-            obj.dir =
-              data[i] === "R"
-                ? direction[direction.indexOf(obj.dir) + 1]
-                : direction[direction.indexOf(obj.dir) - 1];
-          }
+          obj = turning(data[i], obj, direction);
         }
 
         // add result
@@ -94,35 +79,63 @@ app.prepare().then(() => {
    * moving function
    * @param {string} input - input data (R, L, F, B)
    * @param {Object} obj - object of last input and output
-   * @param {number} block - area of map I assume is square (block*block)
+   * @param {number} block - area of map I assume is square area (block*block)
    */
   moving = (input, obj, block) => {
     // E, W are affect to X axis
     // N, WS are affect to Y axis
     let area = block * block;
+    let step = input.length > 1 ? parseInt(input.split("")[1]) : 1;
+    input = input.split("")[0];
+
     obj.x =
       obj.dir === (input === "F" ? "E" : "W")
-        ? obj.x + 1
+        ? obj.x + step
         : obj.dir === (input === "F" ? "W" : "E")
-        ? obj.x === 0
+        ? obj.x <= 0
           ? obj.x
-          : obj.x - 1
+          : obj.x - step
         : obj.x;
 
     obj.y =
       obj.dir === (input === "F" ? "N" : "S")
-        ? obj.y + 1
+        ? obj.y + step
         : obj.dir === (input === "F" ? "S" : "N")
-        ? obj.y === 0
+        ? obj.y <= 0
           ? obj.y
-          : obj.y - 1
+          : obj.y - step
         : obj.y;
 
-    if (obj.x >= area) {
+    if (obj.x > area) {
       obj.x = area;
     }
-    if (obj.y >= area) {
+
+    if (obj.y > area) {
       obj.y = area;
+    }
+
+    return obj;
+  };
+
+  /**
+   * turning function
+   * @param {string} input - input data (R, L, F, B)
+   * @param {Object} obj - object of last input and output
+   * @param {string[]} direction - direction
+   */
+  turning = (input, obj, direction) => {
+    if (direction.indexOf(obj.dir) === 0 && input === "L") {
+      obj.dir = "W";
+    } else if (
+      direction.indexOf(obj.dir) === direction.length - 1 &&
+      input === "R"
+    ) {
+      obj.dir = "N";
+    } else {
+      obj.dir =
+        input === "R"
+          ? direction[direction.indexOf(obj.dir) + 1]
+          : direction[direction.indexOf(obj.dir) - 1];
     }
 
     return obj;
